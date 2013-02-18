@@ -72,7 +72,11 @@ function lz_autologin($row)
 	}
 	/* ===== */
 
-	$sql = $db->query("DELETE FROM $db_online WHERE online_userid='-1' AND online_ip='" . $usr['ip'] . "' LIMIT 1");
+	$res = $db->query("SHOW TABLES LIKE '$db_online'");
+	if (!empty($db_online) && $res->rowCount() == 1)
+	{
+		$db->query("DELETE FROM $db_online WHERE online_userid='-1' AND online_ip='" . $usr['ip'] . "' LIMIT 1");
+	}
 	cot_uriredir_apply($cfg['redirbkonlogin']);
 	cot_uriredir_redirect(empty($redirect) ? cot_url('index') : base64_decode($redirect));
 	exit;
